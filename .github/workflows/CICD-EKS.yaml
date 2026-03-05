@@ -1,4 +1,4 @@
-name: EC2-CICD-EKS
+name: CICD-EKS
 
 on:
   workflow_dispatch:
