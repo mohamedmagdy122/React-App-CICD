@@ -1,0 +1,61 @@
+name: ArgoCD-CI
+
+on:
+  workflow_dispatch:
+
+permissions:
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v6.1.0
+        with:
+          node-version: 20
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Lint Phase
+        run: npm run lint
+        continue-on-error: true
+
+      - name: Unit Test
+        run: npm run test
+        continue-on-error: true
+
+      - name: Build Static Files
+        run: npm run build
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v6.18.0
+        with:
+          push: true
+          tags: |
+            ghcr.io/${{ github.actor }}/react-app-cicd:${{ github.sha }}
+            ghcr.io/${{ github.actor }}/react-app-cicd:latest
+          context: .
+
+      - name: Update Image Tag in GitOps Repo
+        run: |
+          git clone https://x-access-token:${{ secrets.GITOPS_TOKEN }}@github.com/${{ github.actor }}/argocd-gitops-repo-demo.git
+          cd argocd-gitops-repo-demo
+
+          # Replace the image tag in the deployment manifest
+          sed -i "s|image: ghcr.io/.*/react-app-cicd:.*|image: ghcr.io/${{ github.actor }}/react-app-cicd:${{ github.sha }}|" react-app/deployment.yaml
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Update react-app image to ${{ github.sha }}"
+          git push
