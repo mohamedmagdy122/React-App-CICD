@@ -48,7 +48,7 @@ jobs:
 
       - name: Update Image Tag in GitOps Repo
         run: |
-          git clone https://x-access-token:${{ secrets.GITOPS_TOKEN }}@github.com/${{ github.actor }}/argocd-gitops-repo-demo.git
+          git clone https://x-access-token:${{ secrets.GITOPS_TOKEN }}@github.com/${{ github.actor }}/argocd-gitops-repo.git
           cd argocd-gitops-repo-demo
 
           # Replace the image tag in the deployment manifest
