@@ -7,19 +7,24 @@ on:
 jobs:
   test-services:
     runs-on: ubuntu-latest
+    container:
+      image: alpine:latest
 
     services:
       nginx:
         image: nginx:alpine
         ports:
-          - 8080:80
+          - 80
 
       apache:
         image: httpd:2.4
         ports:
-          - 8081:80
+          - 80
 
     steps:
+      - name: Install curl
+        run: apk add --no-cache curl
+
       - name: Check NGINX Service
         run: |
           curl -f http://nginx || exit 1
