@@ -1,0 +1,48 @@
+name: Expressions Practice
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  expressions:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Branch Check
+        run: |
+          if [[ "${{ github.ref }}" == refs/heads/main* ]]; then
+            echo "Main branch"
+          else
+            echo "Other branch"
+          fi
+
+      - name: Commit Message Check
+        if: contains(github.event.head_commit.message, 'fix')
+        run: |
+          echo "Commit message: ${{ github.event.head_commit.message }}"
+
+      - name: Show Event Data
+        run: |
+          echo '${{ toJSON(github.event) }}'
+
+      - name: Environment Value
+        run: |
+          echo "Selected environment: ${{ github.event.inputs.environment || 'dev' }}"
+
+      - name: All steps succeeded
+        if: success()
+        run: echo "All previous steps succeeded"
+
+      - name: A step failed
+        if: failure()
+        run: echo "A previous step failed"
+
+      - name: Always runs
+        if: always()
+        run: echo "This step always runs"
+
+      - name: Workflow cancelled
+        if: cancelled()
+        run: echo "Workflow was cancelled"
