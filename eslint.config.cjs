@@ -1,11 +1,9 @@
 // eslint.config.cjs
 const reactPlugin = require("eslint-plugin-react");
 const js = require("@eslint/js");
-
 module.exports = [
   // ESLint recommended rules
   js.configs.recommended,
-  
   // React specific configuration
   {
     files: ["src/**/*.{js,jsx}"],
@@ -22,6 +20,7 @@ module.exports = [
         document: "readonly",
         navigator: "readonly",
         console: "readonly",
+        process: "readonly",
         // Vitest globals
         describe: "readonly",
         test: "readonly",
