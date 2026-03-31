@@ -1,0 +1,31 @@
+name: Environment Feature
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+
+jobs:
+  deploy-staging:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.environment == 'staging' }}
+    environment: staging
+
+    steps:
+      - name: Deploy
+        run: echo "${{ vars.environment_text }}"
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.environment == 'production' }}
+    environment: production
+
+    steps:
+      - name: Deploy
+        run: echo "${{ vars.environment_text }}"
