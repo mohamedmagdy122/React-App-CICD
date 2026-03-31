@@ -1,0 +1,34 @@
+name: Matrix CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: true
+      max-parallel: 2
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [16, 18, 20]
+        exclude:
+          - os: windows-latest
+            node: 16
+        include:
+          - os: ubuntu-latest
+            node: 21
+
+    steps:
+      - name: Print OS and Node version
+        run: echo "Running on ${{ matrix.os }} with Node.js ${{ matrix.node }}"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Run dummy test
+        run: echo "Running tests on Node ${{ matrix.node }} on ${{ matrix.os }}"
