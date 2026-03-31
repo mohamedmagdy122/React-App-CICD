@@ -1,0 +1,39 @@
+name: Dockerized CD Pipeline
+
+on:
+  workflow_run:
+    workflows: ["Dockerized CI Pipeline"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull Docker image
+        run: |
+          docker pull ghcr.io/mohamedmagdy122/react-app-cicd:${{ github.event.workflow_run.head_sha }}
+
+      - name: Run container
+        run: |
+          docker run -d --name react-app \
+            -p 8080:80 \
+            ghcr.io/mohamedmagdy122/react-app-cicd:${{ github.event.workflow_run.head_sha }}
+
+      - name: Test application
+        run: |
+          sleep 5
+          curl -f http://localhost:8080
+
+      - name: Clean up container
+        if: always()
+        run: docker rm -f react-app
