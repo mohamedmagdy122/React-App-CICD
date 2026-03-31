@@ -1,0 +1,27 @@
+name: Branch-Based Environment
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - staging
+
+jobs:
+  deploy-production:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    environment: production
+
+    steps:
+      - name: Deploy to production
+        run: echo "${{ vars.environment_text }}"
+
+  deploy-staging:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging'
+    environment: staging
+
+    steps:
+      - name: Deploy to staging
+        run: echo "${{ vars.environment_text }}"
