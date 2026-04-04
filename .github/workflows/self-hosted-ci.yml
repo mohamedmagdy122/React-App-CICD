@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: linux-vm
+    runs-on: docker
 
     steps:
       - name: Checkout code
@@ -44,7 +44,7 @@ jobs:
           tags: ghcr.io/mohamedmagdy122/react-app-cicd:${{ github.sha }}
 
   deploy:
-    runs-on: linux-vm
+    runs-on: docker
     needs: build
 
     steps:
