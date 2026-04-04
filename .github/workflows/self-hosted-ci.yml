@@ -67,13 +67,15 @@ jobs:
       - name: Run Docker container
         run: |
           docker run -d --name react-app \
-            --network host \
+            -p 8080:80 \
             ghcr.io/mohamedmagdy122/react-app-cicd:${{ github.sha }}
 
       - name: Verify application is running
         run: |
           sleep 5
-          curl -f http://localhost:80
+          CONTAINER_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' react-app)
+          echo "Container IP: $CONTAINER_IP"
+          curl -f http://$CONTAINER_IP:80
           echo "Application is running!"
 
       - name: Show running containers
