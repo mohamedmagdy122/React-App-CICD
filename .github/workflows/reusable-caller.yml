@@ -1,0 +1,19 @@
+name: Reusable Workflow Caller
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  call-reusable:
+    uses: mohamedmagdy122/reusable-workflows/.github/workflows/ci-reusable.yml@main
+    with:
+      node_version: '20'
+      unit_test: true
+      lint_phase: true
+      docker_registry: ghcr.io
+      docker_username: mohamedmagdy122
+      docker_image_name: mohamedmagdy122/react-app-cicd
+      docker_image_tag: ${{ github.sha }}
+    secrets:
+      docker_password: ${{ secrets.GHCR_TOKEN }}
