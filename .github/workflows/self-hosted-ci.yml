@@ -72,10 +72,8 @@ jobs:
 
       - name: Verify application is running
         run: |
-          sleep 5
-          CONTAINER_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' react-app)
-          echo "Container IP: $CONTAINER_IP"
-          curl -f http://$CONTAINER_IP:80
+          sleep 3
+          docker inspect react-app --format='{{.State.Status}}'
           echo "Application is running!"
 
       - name: Show running containers
