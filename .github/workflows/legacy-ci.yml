@@ -12,25 +12,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 20
-        uses: actions/setup-node@v4
+      - name: Setup Node and Install Dependencies
+        uses: ./.github/actions/setup-node-deps
         with:
-          node-version: '20'
-
-      - name: Cache Node.js dependencies
-        id: cache
-        uses: actions/cache@v4
-        with:
-          path: |
+          node_version: '20'
+          cache_path: |
             node_modules
             ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: npm install
 
       - name: Run lint
         run: npm run lint

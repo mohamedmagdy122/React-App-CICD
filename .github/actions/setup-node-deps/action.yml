@@ -1,0 +1,36 @@
+name: 'Setup Node and Install Dependencies'
+description: 'Installs Node.js, caches dependencies, and runs npm install'
+
+inputs:
+  node_version:
+    description: 'Version of Node.js to install'
+    required: true
+    default: '20'
+  cache_path:
+    description: 'Paths to cache'
+    required: true
+    default: |
+      node_modules
+      ~/.npm
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node_version }}
+
+    - name: Cache dependencies
+      id: cache
+      uses: actions/cache@v4
+      with:
+        path: ${{ inputs.cache_path }}
+        key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - name: Install dependencies
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: npm install
+      shell: bash
