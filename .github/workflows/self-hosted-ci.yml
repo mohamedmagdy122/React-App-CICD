@@ -60,7 +60,9 @@ jobs:
           docker pull ghcr.io/mohamedmagdy122/react-app-cicd:${{ github.sha }}
 
       - name: Stop existing container
-        run: docker rm -f react-app || true
+        run: |
+          docker rm -f react-app || true
+          docker ps -q --filter "publish=8080" | xargs -r docker rm -f
 
       - name: Run Docker container
         run: |
