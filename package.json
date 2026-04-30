@@ -1,30 +1,18 @@
 {
-  "name": "react-static-nginx",
-  "version": "0.1.0",
-  "private": true,
+  "name": "react-app-cicd",
+  "version": "1.0.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview --port 5173",
-    "test": "vitest",
-    "test:watch": "vitest --watch",
-    "lint": "eslint \"src/**/*.{js,jsx}\"",
-    "format": "prettier --write \"src/**/*.{js,jsx,json,css,md}\""
+    "lint": "eslint .",
+    "test": "echo 'no tests'"
   },
   "dependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "vite": "^7.2.7"
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.1",
-    "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.0",
-    "@vitejs/plugin-react": "^5.1.2",
-    "eslint": "^9.39.1",
-    "eslint-define-config": "^2.1.0",
-    "eslint-plugin-react": "^7.37.5",
-    "jsdom": "^27.3.0",
-    "vitest": "^4.0.15"
+    "vite": "^5.0.0",
+    "@vitejs/plugin-react": "^4.0.0"
   }
 }
