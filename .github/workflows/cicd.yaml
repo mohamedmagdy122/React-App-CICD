@@ -55,9 +55,9 @@ jobs:
       run: |
         git clone https://x-access-token:${{ secrets.GITOPS_TOKEN }}@github.com/mohamedmagdy122/argocd-gitops-repo.git
         cd argocd-gitops-repo
-        sed -i "s|image: .*react-app-cicd.*|image: ghcr.io/mohamedmagdy122/react-app-cicd:${{ github.sha }}|" react-app/deployment.yaml
+        sed -i "s|image: .*|image: ghcr.io/mohamedmagdy122/react-app-cicd:${{ github.sha }}|" react-app/deployment.yaml
         git config user.email "ci@github.com"
         git config user.name "GitHub Actions"
         git add react-app/deployment.yaml
-        git commit -m "ci: update react-app image to ${{ github.sha }}"
-        git push
+        git diff --cached --quiet && echo "No changes" || git commit -m "ci: update react-app image to ${{ github.sha }}"
+        git push || echo "Nothing to push"
